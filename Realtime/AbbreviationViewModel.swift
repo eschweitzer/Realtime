@@ -39,12 +39,16 @@ extension ViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if let text = textField.text,
            let textRange = Range(range, in: text) {
-           let updatedText = text.replacingCharacters(in: textRange,
+            let updatedText = text.replacingCharacters(in: textRange,
                                                        with: string)
             
             if updatedText.count > 1 {
                 DataSource.sharedDataSource.downloadData(abv: updatedText) { (success) in
-                    self.Abbreviation = updatedText
+                    if success {
+                        self.Abbreviation = updatedText
+                    } else {
+                        DataSource.sharedDataSource.dataArray = []
+                    }
                     self.tableView.reloadData()
                 }
             } else {
