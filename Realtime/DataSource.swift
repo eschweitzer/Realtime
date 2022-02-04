@@ -11,7 +11,7 @@ import UIKit
 class DataSource {
     static let sharedDataSource = DataSource()
     
-    var dataArray = [ResponseObj]()
+    var dataArray: ResponseObj?
     
     func downloadData(abv: String, completion: @escaping (_ success: Bool) -> Void ) {
         guard let url = URL(string: "http://www.nactem.ac.uk/software/acromine/dictionary.py?sf=\(abv)") else {
@@ -35,7 +35,8 @@ class DataSource {
             
             if let data = data {
                 do {
-                    self.dataArray = try JSONDecoder().decode([ResponseObj].self, from: data)
+                    let responseArray = try JSONDecoder().decode([ResponseObj].self, from: data)
+                    self.dataArray = responseArray.first
                     DispatchQueue.main.async {
                         completion(true)
                     }

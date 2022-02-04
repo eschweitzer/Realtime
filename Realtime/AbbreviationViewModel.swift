@@ -15,14 +15,17 @@ extension ViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
-        return DataSource.sharedDataSource.dataArray.count
+        if let data = DataSource.sharedDataSource.dataArray?.lfs {
+            return data.count
+        }
+        return 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "AbbreviationCell", for: indexPath)
 
-        if let cell = cell as? AbbreviationCell, indexPath.row < DataSource.sharedDataSource.dataArray.count {
-            cell.titleLabel.text = DataSource.sharedDataSource.dataArray[indexPath.row].lfs.first?.lf
+        if let cell = cell as? AbbreviationCell, let data = DataSource.sharedDataSource.dataArray?.lfs {
+            cell.titleLabel.text = data[indexPath.row].lf
             return cell
         }
 
@@ -47,12 +50,12 @@ extension ViewController: UITextFieldDelegate {
                     if success {
                         self.Abbreviation = updatedText
                     } else {
-                        DataSource.sharedDataSource.dataArray = []
+                        DataSource.sharedDataSource.dataArray?.lfs = []
                     }
                     self.tableView.reloadData()
                 }
             } else {
-                DataSource.sharedDataSource.dataArray = []
+                DataSource.sharedDataSource.dataArray?.lfs = []
                 self.tableView.reloadData()
             }
         }
